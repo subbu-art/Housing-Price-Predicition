@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Housing Price Prediction</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+	body {
+    text-align: center;
+            background-color: rgba(0, 0, 0, 0.1); /* Adjust the alpha value to control opacity (0.1 means 10% opacity) */
+            background-image: url(); /* Replace with the actual path to your image */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0;
+            font-family: Arial, sans-serif;
+	}
+	h1 {
+    margin-top: 100px;
+	}
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .input-container {
+            flex: 1;
+            padding: 20px;
+        }
+        .output-container {
+            flex: 1;
+            padding: 20px;
+            border-left: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Housing Price Prediction</h1>
+    <div class="container">
+        <div class="input-container">
+            <form id="inputForm">
+                <label for="OverallQual_GrLivArea">OverallQual_GrLivArea: <span id="OverallQual_GrLivAreaValue">384</span></label>
+                <input type="range" id="OverallQual_GrLivArea" name="OverallQual_GrLivArea" min="384" max="550000" step="1000" oninput="updateSliderValue('OverallQual_GrLivArea', 'OverallQual_GrLivAreaValue')"><br>
+
+                <label for="Overall Qual_p3">Overall Qual_p3: <span id="OverallQual_p3Value">1</span></label>
+                <input type="range" id="Overall Qual_p3" name="Overall Qual_p3" min="1" max="1050" step="10" oninput="updateSliderValue('Overall Qual_p3', 'OverallQual_p3Value')"><br>
+
+                <label for="Overall Qual_p2">Overall Qual_p2: <span id="OverallQual_p2Value">1</span></label>
+                <input type="range" id="Overall Qual_p2" name="Overall Qual_p2" min="1" max="110" step="1" oninput="updateSliderValue('Overall Qual_p2', 'OverallQual_p2Value')"><br>
+
+                <label for="Overall Qual">Overall Qual: <span id="OverallQualValue">1</span></label>
+                <input type="range" id="Overall Qual" name="Overall Qual" min="1" max="50" step="1" oninput="updateSliderValue('Overall Qual', 'OverallQualValue')"><br>
+
+                <label for="Gr Liv Area">Gr Liv Area: <span id="GrLivAreaValue">384</span></label>
+                <input type="range" id="Gr Liv Area" name="Gr Liv Area" min="384" max="4986" step="100" oninput="updateSliderValue('Gr Liv Area', 'GrLivAreaValue')"><br>
+
+                <label for="Gr Liv Area_p2">Gr_Liv_Area_p2: <span id="GrLivArea_p2Value">182556</span></label>
+                <input type="range" id="Gr Liv Area_p2" name="Gr Liv Area_p2" min="182556" max="20045616" step="1000" oninput="updateSliderValue('Gr Liv Area_p2', 'GrLivArea_p2Value')"><br>
+
+                <label for="Yr Sold">Yr Sold: <span id="YrSoldValue">2006</span></label>
+                <input type="range" id="Yr Sold" name="Yr Sold" min="2006" max="2050" step="1" oninput="updateSliderValue('Yr Sold', 'YrSoldValue')"><br>
+
+                <input type="submit" value="Predict">
+            </form>
+        </div>
+        <div class="output-container">
+            <p>Predicted Housing Price: <span id="predictedPrice"></span></p>
+        </div>
+    </div>
+    
+    <script>
+        function updateSliderValue(sliderId, labelId) {
+            const slider = document.getElementById(sliderId);
+            const label = document.getElementById(labelId);
+            label.textContent = slider.value;
+        }
+
+        $(document).ready(function() {
+            $("#inputForm").submit(function(event) {
+                event.preventDefault();
+                const formData = $(this).serialize();
+
+                // Send data to Flask endpoint
+                $.ajax({
+                    type: "POST",
+                    url: "/predict",
+                    data: formData,
+                    success: function(response) {
+                        console.log(response);
+                        //const prediction = response.prediction[0]; // Access the prediction value
+                        $("#predictedPrice").text('$' + response);
+                        console.log(response);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
